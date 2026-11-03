@@ -1,98 +1,233 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>醫療資訊部門維護管理系統</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: "Noto Sans TC", Arial, sans-serif;
-      background: #f4f7fb;
-      color: #243247;
-    }
-    header {
-      background: #123b5d;
-      color: white;
-      padding: 24px 32px;
-    }
-    header h1 { margin: 0 0 8px; font-size: 25px; }
-    header p { margin: 0; color: #c8d9e8; }
-    main { max-width: 1200px; margin: 28px auto; padding: 0 20px; }
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-    }
-    .card, .panel {
-      background: white;
-      border-radius: 14px;
-      padding: 22px;
-      box-shadow: 0 3px 14px rgba(30, 55, 80, .06);
-    }
-    .card span { color: #718096; font-size: 14px; }
-    .card strong { display: block; margin-top: 12px; font-size: 30px; }
-    .panel { margin-top: 22px; }
-    .panel h2 { margin-top: 0; font-size: 19px; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 14px 10px; text-align: left; border-bottom: 1px solid #edf0f4; }
-    th { color: #718096; font-size: 13px; }
-    .status { color: #16794b; background: #e6f6ed; padding: 5px 10px; border-radius: 20px; }
-    @media (max-width: 700px) {
-      .summary { grid-template-columns: repeat(2, 1fr); }
-      header { padding: 22px 18px; }
-      table { font-size: 13px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>醫院資訊維護管理中心</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,"Noto Sans TC",sans-serif;background:#f3f6fb;color:#243247}
+button,input,select{font:inherit}
+.app{display:flex;min-height:100vh}
+.sidebar{width:245px;background:#142c4b;color:white;padding:28px 18px;flex-shrink:0}
+.brand{font-size:19px;font-weight:bold;padding:0 10px 30px;line-height:1.6}
+.brand small{display:block;color:#9db2ca;font-size:11px;font-weight:normal}
+.nav-title{color:#8196af;font-size:11px;padding:15px 12px 8px}
+.nav{display:block;color:#d4deeb;text-decoration:none;padding:13px 14px;border-radius:9px;margin:4px 0;font-size:14px}
+.nav.active,.nav:hover{background:#24466e;color:white}
+.main{flex:1;min-width:0;padding:30px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:26px}
+h1{font-size:25px;margin:0 0 7px}
+.sub{color:#8190a3;font-size:13px}
+.user{background:white;padding:10px 15px;border-radius:12px;font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px}
+.card,.panel{background:white;border-radius:15px;padding:20px;box-shadow:0 3px 15px #263e5c0a}
+.card-label{color:#77869a;font-size:13px}
+.card-value{font-size:30px;font-weight:bold;margin:12px 0 5px}
+.card-note{font-size:12px;color:#8b98a9}
+.blue{color:#3478d4}.orange{color:#e49a37}.green{color:#21966a}.purple{color:#8565ca}
+.content{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(270px,1fr);gap:20px}
+.panel{margin-bottom:20px}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px}
+.panel h2{font-size:17px;margin:0}
+.btn{border:0;border-radius:8px;padding:10px 15px;background:#2767b1;color:white;cursor:pointer}
+.btn:hover{background:#1d518e}
+.btn-light{background:#edf3fa;color:#31577f}
+.month-controls{display:flex;align-items:center;gap:8px}
+.month-controls button{border:0;background:#edf3fa;border-radius:7px;padding:7px 11px;cursor:pointer}
+.month-name{font-weight:bold;min-width:100px;text-align:center}
+.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.weekday{text-align:center;color:#8492a4;font-size:12px;padding:8px 0}
+.day{min-height:88px;background:#f8fafd;border-radius:8px;padding:7px 5px;font-size:12px;overflow:hidden}
+.day.today{outline:2px solid #4385d4;background:#f0f6ff}
+.day.muted{opacity:.35}
+.day-num{font-weight:bold;margin-bottom:6px}
+.event{font-size:10px;padding:4px;margin-top:3px;border-radius:4px;background:#e4efff;color:#2764a6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.event.done{background:#e3f5eb;color:#168052}
+.event.progress{background:#fff0d9;color:#a56a16}
+.event.urgent{background:#fde8e8;color:#bc4141}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:13px 8px;border-bottom:1px solid #edf0f4}
+th{color:#8491a2;font-weight:normal;font-size:12px}
+.status{padding:5px 9px;border-radius:20px;font-size:11px;white-space:nowrap}
+.status.待處理{background:#fff0d9;color:#a56a16}
+.status.進行中{background:#e4efff;color:#2764a6}
+.status.已完成{background:#e3f5eb;color:#168052}
+.action{border:0;background:#edf3fa;color:#31577f;border-radius:6px;padding:6px 9px;cursor:pointer}
+.task-list{display:flex;flex-direction:column;gap:14px}
+.task{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid #edf0f4;padding-bottom:12px;font-size:13px}
+.task small{display:block;color:#8491a2;margin-top:5px}
+.footer{text-align:center;color:#9aa5b4;font-size:11px;padding:15px}
+.modal{display:none;position:fixed;inset:0;background:#10243b88;align-items:center;justify-content:center;padding:15px;z-index:5}
+.modal.show{display:flex}
+.dialog{background:white;border-radius:15px;padding:25px;width:100%;max-width:460px}
+.dialog h2{margin-top:0}
+.field{margin:14px 0}
+.field label{display:block;font-size:13px;margin-bottom:7px;color:#53647a}
+.field input,.field select{width:100%;padding:11px;border:1px solid #dce3ec;border-radius:8px}
+.dialog-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}
+@media(max-width:950px){.stats{grid-template-columns:repeat(2,1fr)}.content{grid-template-columns:1fr}}
+@media(max-width:650px){.sidebar{width:65px;padding:15px 7px}.brand{font-size:0;padding:10px 0}.brand:after{content:"IT";font-size:18px}.brand small,.nav-title{display:none}.nav{font-size:0;text-align:center;padding:13px 3px}.nav:after{content:"•";font-size:20px}.main{padding:17px 10px}.topbar{align-items:flex-start}.user{display:none}.day{min-height:65px;padding:4px 2px}.event{font-size:9px}.calendar{gap:3px}.day-num{font-size:11px}}
+</style>
 </head>
 <body>
-  <header>
-    <h1>醫療資訊部門維護管理系統</h1>
-    <p>Hospital IT Maintenance Management Dashboard</p>
-  </header>
+<div class="app">
+<aside class="sidebar">
+<div class="brand">醫療資訊中心<small>IT MAINTENANCE SYSTEM</small></div>
+<div class="nav-title">管理選單</div>
+<a class="nav active" href="#dashboard">▦　總覽儀表板</a>
+<a class="nav" href="#calendar">▦　維護工作月曆</a>
+<a class="nav" href="#tasks">▤　維護工單管理</a>
+<a class="nav" href="#equipment">▣　資訊設備管理</a>
+<a class="nav" href="#staff">♙　人員管理</a>
+<div class="nav-title">系統資訊</div>
+<a class="nav" href="#about">⚙　系統說明</a>
+</aside>
 
-  <main>
-    <section class="summary">
-      <div class="card"><span>本月維護項目</span><strong>12</strong></div>
-      <div class="card"><span>待處理事項</span><strong>4</strong></div>
-      <div class="card"><span>已完成事項</span><strong>8</strong></div>
-      <div class="card"><span>維護人員</span><strong>10</strong></div>
-    </section>
+<main class="main" id="dashboard">
+<div class="topbar">
+<div>
+<h1>資訊維護管理總覽</h1>
+<div class="sub">Hospital IT Maintenance Management Center</div>
+</div>
+<div class="user">👤 資訊管理部門　｜　展示模式</div>
+</div>
 
-    <section class="panel">
-      <h2>近期維護工作</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>維護項目</th>
-            <th>負責人</th>
-            <th>預定日期</th>
-            <th>狀態</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>核心網路設備檢查</td>
-            <td>資訊人員 A</td>
-            <td>2026/11/05</td>
-            <td><span class="status">已排程</span></td>
-          </tr>
-          <tr>
-            <td>備份系統測試</td>
-            <td>資訊人員 B</td>
-            <td>2026/11/08</td>
-            <td><span class="status">已排程</span></td>
-          </tr>
-          <tr>
-            <td>伺服器例行維護</td>
-            <td>資訊人員 C</td>
-            <td>2026/11/12</td>
-            <td><span class="status">已排程</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-  </main>
+<section class="stats">
+<div class="card"><div class="card-label">本月維護工作</div><div class="card-value blue" id="total">0</div><div class="card-note">本月排程總數</div></div>
+<div class="card"><div class="card-label">待處理工作</div><div class="card-value orange" id="pending">0</div><div class="card-note">等待執行</div></div>
+<div class="card"><div class="card-label">進行中工作</div><div class="card-value purple" id="progress">0</div><div class="card-note">目前執行中</div></div>
+<div class="card"><div class="card-label">已完成工作</div><div class="card-value green" id="completed">0</div><div class="card-note">已完成維護</div></div>
+</section>
+
+<div class="content">
+<div>
+<section class="panel" id="calendar">
+<div class="panel-head">
+<h2>📅 維護工作月曆</h2>
+<div class="month-controls">
+<button onclick="changeMonth(-1)">‹</button>
+<span class="month-name" id="monthName"></span>
+<button onclick="changeMonth(1)">›</button>
+</div>
+</div>
+<div class="calendar" id="calendarGrid"></div>
+</section>
+
+<section class="panel" id="tasks">
+<div class="panel-head">
+<h2>📋 維護工單列表</h2>
+<button class="btn" onclick="openModal()">＋ 新增工作</button>
+</div>
+<div style="overflow-x:auto">
+<table>
+<thead><tr><th>維護項目</th><th>負責人</th><th>日期</th><th>狀態</th><th>操作</th></tr></thead>
+<tbody id="taskTable"></tbody>
+</table>
+</div>
+</section>
+</div>
+
+<div>
+<section class="panel">
+<div class="panel-head"><h2>🔔 近期維護工作</h2></div>
+<div class="task-list" id="upcoming"></div>
+</section>
+<section class="panel" id="equipment">
+<div class="panel-head"><h2>🖥️ 設備管理概況</h2></div>
+<div class="task-list">
+<div class="task"><span>伺服器設備</span><strong>12 台</strong></div>
+<div class="task"><span>網路設備</span><strong>28 台</strong></div>
+<div class="task"><span>電腦設備</span><strong>150 台</strong></div>
+<div class="task"><span>備份設備</span><strong>5 台</strong></div>
+</div>
+</section>
+<section class="panel" id="staff">
+<div class="panel-head"><h2>👥 人員管理</h2></div>
+<div class="task-list">
+<div class="task"><span>資訊維護人員</span><strong>10 人</strong></div>
+<div class="task"><span>系統管理人員</span><strong>2 人</strong></div>
+</div>
+</section>
+<section class="panel" id="about">
+<h2>系統說明</h2>
+<p style="font-size:13px;color:#78879a;line-height:1.8">本系統為醫療資訊部門維護排程展示原型。畫面數據為虛構示範資料，尚未連接正式資料庫或多人登入服務。</p>
+</section>
+</div>
+</div>
+<div class="footer">Hospital IT Maintenance Center · Demo Version</div>
+</main>
+</div>
+
+<div class="modal" id="modal">
+<div class="dialog">
+<h2>新增維護工作</h2>
+<div class="field"><label>維護項目</label><input id="taskName" placeholder="例如：核心網路設備檢查"></div>
+<div class="field"><label>負責人</label><input id="owner" placeholder="例如：資訊人員 A"></div>
+<div class="field"><label>預定日期</label><input id="date" type="date"></div>
+<div class="field"><label>工作狀態</label><select id="status"><option>待處理</option><option>進行中</option><option>已完成</option></select></div>
+<div class="dialog-actions">
+<button class="btn btn-light" onclick="closeModal()">取消</button>
+<button class="btn" onclick="addTask()">儲存工作</button>
+</div>
+</div>
+</div>
+
+<script>
+const today=new Date();
+let shown=new Date(today.getFullYear(),today.getMonth(),1);
+const pad=n=>String(n).padStart(2,'0');
+const dateKey=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+let tasks=JSON.parse(localStorage.getItem('hospitalTasks')||'null')||[
+{ name:'核心網路設備檢查',owner:'資訊人員 A',date:dateKey(new Date(today.getFullYear(),today.getMonth(),5)),status:'待處理'},
+{ name:'備份系統測試',owner:'資訊人員 B',date:dateKey(new Date(today.getFullYear(),today.getMonth(),8)),status:'進行中'},
+{ name:'伺服器例行維護',owner:'資訊人員 C',date:dateKey(new Date(today.getFullYear(),today.getMonth(),12)),status:'已完成'},
+{ name:'防火牆安全檢查',owner:'資訊人員 D',date:dateKey(new Date(today.getFullYear(),today.getMonth(),18)),status:'待處理'},
+{ name:'資料庫效能檢查',owner:'資訊人員 E',date:dateKey(new Date(today.getFullYear(),today.getMonth(),23)),status:'待處理'}
+];
+function save(){localStorage.setItem('hospitalTasks',JSON.stringify(tasks))}
+function render(){
+const month=shown.getMonth(),year=shown.getFullYear();
+document.getElementById('monthName').textContent=`${year} 年 ${month+1} 月`;
+const first=new Date(year,month,1),start=(first.getDay()+6)%7;
+const days=new Date(year,month+1,0).getDate();
+const prev=new Date(year,month,0).getDate();
+let html=['一','二','三','四','五','六','日'].map(x=>`<div class="weekday">${x}</div>`).join('');
+for(let i=0;i<42;i++){
+let n=i-start+1,d,m,y,muted=false;
+if(n<1){d=prev+n;m=month-1;y=year;muted=true}
+else if(n>days){d=n-days;m=month+1;y=year;muted=true}
+else{d=n;m=month;y=year}
+let key=`${y}-${pad(m+1)}-${pad(d)}`;
+let items=tasks.filter(t=>t.date===key);
+let isToday=key===dateKey(today);
+html+=`<div class="day ${muted?'muted':''} ${isToday?'today':''}"><div class="day-num">${d}</div>${items.slice(0,2).map(t=>`<div class="event ${t.status==='已完成'?'done':t.status==='進行中'?'progress':''}" title="${t.name}">${t.name}</div>`).join('')}${items.length>2?`<div>+${items.length-2} 項</div>`:''}</div>`;
+}
+document.getElementById('calendarGrid').innerHTML=html;
+const current=tasks.filter(t=>t.date.startsWith(`${year}-${pad(month+1)}`));
+document.getElementById('total').textContent=current.length;
+document.getElementById('pending').textContent=current.filter(t=>t.status==='待處理').length;
+document.getElementById('progress').textContent=current.filter(t=>t.status==='進行中').length;
+document.getElementById('completed').textContent=current.filter(t=>t.status==='已完成').length;
+document.getElementById('taskTable').innerHTML=current.sort((a,b)=>a.date.localeCompare(b.date)).map((t,i)=>`<tr><td>${escapeHTML(t.name)}</td><td>${escapeHTML(t.owner)}</td><td>${t.date}</td><td><span class="status ${t.status}">${t.status}</span></td><td><button class="action" onclick="nextStatus('${t.date}',${tasks.indexOf(t)})">更新</button></td></tr>`).join('')||'<tr><td colspan="5">本月尚無維護工作</td></tr>';
+const upcoming=tasks.filter(t=>t.status!=='已完成').sort((a,b)=>a.date.localeCompare(b.date)).slice(0,5);
+document.getElementById('upcoming').innerHTML=upcoming.map(t=>`<div class="task"><span>${escapeHTML(t.name)}<small>${t.date} · ${escapeHTML(t.owner)}</small></span><span class="status ${t.status}">${t.status}</span></div>`).join('')||'目前沒有待辦工作';
+}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function changeMonth(n){shown=new Date(shown.getFullYear(),shown.getMonth()+n,1);render()}
+function openModal(){document.getElementById('modal').classList.add('show');document.getElementById('date').value=dateKey(today)}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+function addTask(){
+const name=document.getElementById('taskName').value.trim(),owner=document.getElementById('owner').value.trim(),date=document.getElementById('date').value,status=document.getElementById('status').value;
+if(!name||!owner||!date){alert('請填寫維護項目、負責人及日期');return}
+tasks.push({name,owner,date,status});save();shown=new Date(date+'T00:00:00');closeModal();render();
+document.getElementById('taskName').value='';document.getElementById('owner').value='';
+}
+function nextStatus(date,index){
+const order=['待處理','進行中','已完成'];
+tasks[index].status=order[(order.indexOf(tasks[index].status)+1)%3];save();render();
+}
+render();
+</script>
 </body>
-</html>
+</html> 
