@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>醫療資訊部門維護管理系統</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Noto Sans TC", Arial, sans-serif;
+      background: #f4f7fb;
+      color: #243247;
+    }
+    header {
+      background: #123b5d;
+      color: white;
+      padding: 24px 32px;
+    }
+    header h1 { margin: 0 0 8px; font-size: 25px; }
+    header p { margin: 0; color: #c8d9e8; }
+    main { max-width: 1200px; margin: 28px auto; padding: 0 20px; }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .card, .panel {
+      background: white;
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 3px 14px rgba(30, 55, 80, .06);
+    }
+    .card span { color: #718096; font-size: 14px; }
+    .card strong { display: block; margin-top: 12px; font-size: 30px; }
+    .panel { margin-top: 22px; }
+    .panel h2 { margin-top: 0; font-size: 19px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 14px 10px; text-align: left; border-bottom: 1px solid #edf0f4; }
+    th { color: #718096; font-size: 13px; }
+    .status { color: #16794b; background: #e6f6ed; padding: 5px 10px; border-radius: 20px; }
+    @media (max-width: 700px) {
+      .summary { grid-template-columns: repeat(2, 1fr); }
+      header { padding: 22px 18px; }
+      table { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>醫療資訊部門維護管理系統</h1>
+    <p>Hospital IT Maintenance Management Dashboard</p>
+  </header>
+
+  <main>
+    <section class="summary">
+      <div class="card"><span>本月維護項目</span><strong>12</strong></div>
+      <div class="card"><span>待處理事項</span><strong>4</strong></div>
+      <div class="card"><span>已完成事項</span><strong>8</strong></div>
+      <div class="card"><span>維護人員</span><strong>10</strong></div>
+    </section>
+
+    <section class="panel">
+      <h2>近期維護工作</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>維護項目</th>
+            <th>負責人</th>
+            <th>預定日期</th>
+            <th>狀態</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>核心網路設備檢查</td>
+            <td>資訊人員 A</td>
+            <td>2026/11/05</td>
+            <td><span class="status">已排程</span></td>
+          </tr>
+          <tr>
+            <td>備份系統測試</td>
+            <td>資訊人員 B</td>
+            <td>2026/11/08</td>
+            <td><span class="status">已排程</span></td>
+          </tr>
+          <tr>
+            <td>伺服器例行維護</td>
+            <td>資訊人員 C</td>
+            <td>2026/11/12</td>
+            <td><span class="status">已排程</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>
