@@ -2,232 +2,284 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>醫院資訊維護管理中心</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>醫院資訊維修滿意度管理系統</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,"Noto Sans TC",sans-serif;background:#f3f6fb;color:#243247}
-button,input,select{font:inherit}
+button,input,select,textarea{font:inherit}
 .app{display:flex;min-height:100vh}
-.sidebar{width:245px;background:#142c4b;color:white;padding:28px 18px;flex-shrink:0}
-.brand{font-size:19px;font-weight:bold;padding:0 10px 30px;line-height:1.6}
+.sidebar{width:235px;background:#142c4b;color:white;padding:25px 16px;flex-shrink:0}
+.brand{font-size:19px;font-weight:bold;padding:5px 10px 28px;line-height:1.6}
 .brand small{display:block;color:#9db2ca;font-size:11px;font-weight:normal}
-.nav-title{color:#8196af;font-size:11px;padding:15px 12px 8px}
-.nav{display:block;color:#d4deeb;text-decoration:none;padding:13px 14px;border-radius:9px;margin:4px 0;font-size:14px}
+.nav-title{color:#8196af;font-size:11px;padding:14px 12px 8px}
+.nav{display:block;color:#d4deeb;text-decoration:none;padding:13px 12px;border-radius:9px;margin:4px 0;font-size:14px}
 .nav.active,.nav:hover{background:#24466e;color:white}
-.main{flex:1;min-width:0;padding:30px}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:26px}
+.main{flex:1;min-width:0;padding:28px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;gap:12px}
 h1{font-size:25px;margin:0 0 7px}
-.sub{color:#8190a3;font-size:13px}
-.user{background:white;padding:10px 15px;border-radius:12px;font-size:13px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px}
-.card,.panel{background:white;border-radius:15px;padding:20px;box-shadow:0 3px 15px #263e5c0a}
-.card-label{color:#77869a;font-size:13px}
+.sub{font-size:13px;color:#8190a3}
+.user{background:white;padding:11px 15px;border-radius:10px;font-size:13px}
+.page{display:none}.page.active{display:block}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:20px}
+.card,.panel{background:white;border-radius:14px;padding:19px;box-shadow:0 3px 15px #263e5c0a}
+.card-label{font-size:13px;color:#77869a}
 .card-value{font-size:30px;font-weight:bold;margin:12px 0 5px}
 .card-note{font-size:12px;color:#8b98a9}
 .blue{color:#3478d4}.orange{color:#e49a37}.green{color:#21966a}.purple{color:#8565ca}
-.content{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(270px,1fr);gap:20px}
-.panel{margin-bottom:20px}
-.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px}
-.panel h2{font-size:17px;margin:0}
+.grid{display:grid;grid-template-columns:1.5fr 1fr;gap:18px}
+.panel{margin-bottom:18px}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:17px}
+h2{font-size:17px;margin:0}
 .btn{border:0;border-radius:8px;padding:10px 15px;background:#2767b1;color:white;cursor:pointer}
 .btn:hover{background:#1d518e}
-.btn-light{background:#edf3fa;color:#31577f}
-.month-controls{display:flex;align-items:center;gap:8px}
-.month-controls button{border:0;background:#edf3fa;border-radius:7px;padding:7px 11px;cursor:pointer}
-.month-name{font-weight:bold;min-width:100px;text-align:center}
-.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
-.weekday{text-align:center;color:#8492a4;font-size:12px;padding:8px 0}
-.day{min-height:88px;background:#f8fafd;border-radius:8px;padding:7px 5px;font-size:12px;overflow:hidden}
-.day.today{outline:2px solid #4385d4;background:#f0f6ff}
-.day.muted{opacity:.35}
-.day-num{font-weight:bold;margin-bottom:6px}
-.event{font-size:10px;padding:4px;margin-top:3px;border-radius:4px;background:#e4efff;color:#2764a6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.event.done{background:#e3f5eb;color:#168052}
-.event.progress{background:#fff0d9;color:#a56a16}
-.event.urgent{background:#fde8e8;color:#bc4141}
+.btn.light{background:#edf3fa;color:#31577f}
+.btn.green{background:#21966a;color:white}
 table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{text-align:left;padding:13px 8px;border-bottom:1px solid #edf0f4}
-th{color:#8491a2;font-weight:normal;font-size:12px}
+th,td{text-align:left;padding:12px 8px;border-bottom:1px solid #edf0f4}
+th{color:#8491a2;font-size:12px;font-weight:normal;white-space:nowrap}
 .status{padding:5px 9px;border-radius:20px;font-size:11px;white-space:nowrap}
 .status.待處理{background:#fff0d9;color:#a56a16}
-.status.進行中{background:#e4efff;color:#2764a6}
+.status.處理中{background:#e4efff;color:#2764a6}
+.status.待評價{background:#f0eaff;color:#7853b5}
 .status.已完成{background:#e3f5eb;color:#168052}
-.action{border:0;background:#edf3fa;color:#31577f;border-radius:6px;padding:6px 9px;cursor:pointer}
-.task-list{display:flex;flex-direction:column;gap:14px}
-.task{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid #edf0f4;padding-bottom:12px;font-size:13px}
-.task small{display:block;color:#8491a2;margin-top:5px}
-.footer{text-align:center;color:#9aa5b4;font-size:11px;padding:15px}
-.modal{display:none;position:fixed;inset:0;background:#10243b88;align-items:center;justify-content:center;padding:15px;z-index:5}
-.modal.show{display:flex}
-.dialog{background:white;border-radius:15px;padding:25px;width:100%;max-width:460px}
-.dialog h2{margin-top:0}
-.field{margin:14px 0}
-.field label{display:block;font-size:13px;margin-bottom:7px;color:#53647a}
-.field input,.field select{width:100%;padding:11px;border:1px solid #dce3ec;border-radius:8px}
-.dialog-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}
-@media(max-width:950px){.stats{grid-template-columns:repeat(2,1fr)}.content{grid-template-columns:1fr}}
-@media(max-width:650px){.sidebar{width:65px;padding:15px 7px}.brand{font-size:0;padding:10px 0}.brand:after{content:"IT";font-size:18px}.brand small,.nav-title{display:none}.nav{font-size:0;text-align:center;padding:13px 3px}.nav:after{content:"•";font-size:20px}.main{padding:17px 10px}.topbar{align-items:flex-start}.user{display:none}.day{min-height:65px;padding:4px 2px}.event{font-size:9px}.calendar{gap:3px}.day-num{font-size:11px}}
+.status.需改善{background:#fde8e8;color:#bc4141}
+.field{margin:13px 0}
+.field label{display:block;font-size:13px;color:#53647a;margin-bottom:7px}
+.field input,.field select,.field textarea{width:100%;padding:11px;border:1px solid #dce3ec;border-radius:8px;background:white}
+.field textarea{min-height:85px;resize:vertical}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 15px}
+.rating-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 0;border-bottom:1px solid #edf0f4}
+.rating-row label{font-size:14px}
+.rating-row select{padding:8px;border:1px solid #dce3ec;border-radius:8px}
+.hint{font-size:12px;color:#8794a5;line-height:1.7}
+.bar-row{margin:15px 0}
+.bar-label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:7px}
+.bar{height:9px;background:#edf1f6;border-radius:10px;overflow:hidden}
+.bar span{display:block;height:100%;background:#4385d4;border-radius:10px}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+.search{padding:9px 11px;border:1px solid #dce3ec;border-radius:8px;max-width:230px;width:100%}
+.empty{text-align:center;color:#98a3b2;padding:25px}
+.footer{text-align:center;color:#9aa5b4;font-size:11px;padding:16px}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
+@media(max-width:620px){.sidebar{width:64px;padding:12px 6px}.brand{font-size:0;padding:8px}.brand:after{content:"IT";font-size:18px}.brand small,.nav-title{display:none}.nav{font-size:0;text-align:center;padding:13px 2px}.nav:after{content:"●";font-size:15px}.main{padding:16px 10px}.user{display:none}.form-grid{grid-template-columns:1fr}.topbar h1{font-size:20px}}
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="sidebar">
-<div class="brand">醫療資訊中心<small>IT MAINTENANCE SYSTEM</small></div>
-<div class="nav-title">管理選單</div>
-<a class="nav active" href="#dashboard">▦　總覽儀表板</a>
-<a class="nav" href="#calendar">▦　維護工作月曆</a>
-<a class="nav" href="#tasks">▤　維護工單管理</a>
-<a class="nav" href="#equipment">▣　資訊設備管理</a>
-<a class="nav" href="#staff">♙　人員管理</a>
-<div class="nav-title">系統資訊</div>
-<a class="nav" href="#about">⚙　系統說明</a>
+<div class="brand">醫療資訊中心<small>IT SERVICE SATISFACTION</small></div>
+<div class="nav-title">滿意度管理</div>
+<a class="nav active" href="#" data-page="dashboard">▦　滿意度總覽</a>
+<a class="nav" href="#" data-page="cases">▤　維修案件管理</a>
+<a class="nav" href="#" data-page="survey">✎　填寫滿意度</a>
+<a class="nav" href="#" data-page="records">▣　滿意度紀錄</a>
+<a class="nav" href="#" data-page="improve">⚑　改善追蹤</a>
+<div class="nav-title">系統</div>
+<a class="nav" href="#" data-page="about">⚙　系統說明</a>
 </aside>
 
-<main class="main" id="dashboard">
+<main class="main">
 <div class="topbar">
+<div><h1 id="pageTitle">資訊維修滿意度總覽</h1>
+<div class="sub">Hospital IT Repair Service Satisfaction Management</div></div>
+<div class="user">👤 資訊行政管理人員｜展示模式</div>
+</div>
+
+<section class="page active" id="dashboard">
+<div class="stats">
+<div class="card"><div class="card-label">維修案件總數</div><div class="card-value blue" id="total">0</div><div class="card-note">累計登錄案件</div></div>
+<div class="card"><div class="card-label">已填寫滿意度</div><div class="card-value purple" id="rated">0</div><div class="card-note">已完成評價案件</div></div>
+<div class="card"><div class="card-label">平均滿意度</div><div class="card-value green" id="average">—</div><div class="card-note">五分制平均分數</div></div>
+<div class="card"><div class="card-label">待改善案件</div><div class="card-value orange" id="needs">0</div><div class="card-note">需要持續追蹤</div></div>
+</div>
+<div class="grid">
 <div>
-<h1>資訊維護管理總覽</h1>
-<div class="sub">Hospital IT Maintenance Management Center</div>
+<div class="panel">
+<div class="panel-head"><h2>📊 各項服務滿意度</h2></div>
+<div id="categoryBars"></div>
 </div>
-<div class="user">👤 資訊管理部門　｜　展示模式</div>
+<div class="panel">
+<div class="panel-head"><h2>📋 最近維修滿意度紀錄</h2><button class="btn light" onclick="showPage('records')">查看全部</button></div>
+<div style="overflow-x:auto"><table><thead><tr><th>案件編號</th><th>服務項目</th><th>整體評分</th><th>狀態</th></tr></thead><tbody id="recentRows"></tbody></table></div>
 </div>
-
-<section class="stats">
-<div class="card"><div class="card-label">本月維護工作</div><div class="card-value blue" id="total">0</div><div class="card-note">本月排程總數</div></div>
-<div class="card"><div class="card-label">待處理工作</div><div class="card-value orange" id="pending">0</div><div class="card-note">等待執行</div></div>
-<div class="card"><div class="card-label">進行中工作</div><div class="card-value purple" id="progress">0</div><div class="card-note">目前執行中</div></div>
-<div class="card"><div class="card-label">已完成工作</div><div class="card-value green" id="completed">0</div><div class="card-note">已完成維護</div></div>
-</section>
-
-<div class="content">
+</div>
 <div>
-<section class="panel" id="calendar">
-<div class="panel-head">
-<h2>📅 維護工作月曆</h2>
-<div class="month-controls">
-<button onclick="changeMonth(-1)">‹</button>
-<span class="month-name" id="monthName"></span>
-<button onclick="changeMonth(1)">›</button>
+<div class="panel">
+<div class="panel-head"><h2>📌 案件處理狀況</h2></div>
+<div id="caseSummary"></div>
+</div>
+<div class="panel">
+<div class="panel-head"><h2>💡 管理提醒</h2></div>
+<div id="reminders" class="hint"></div>
+</div>
+<div class="panel">
+<div class="panel-head"><h2>快速操作</h2></div>
+<div class="actions">
+<button class="btn" onclick="showPage('cases')">＋ 登錄維修案件</button>
+<button class="btn light" onclick="showPage('survey')">填寫滿意度</button>
 </div>
 </div>
-<div class="calendar" id="calendarGrid"></div>
+</div>
+</div>
 </section>
 
-<section class="panel" id="tasks">
-<div class="panel-head">
-<h2>📋 維護工單列表</h2>
-<button class="btn" onclick="openModal()">＋ 新增工作</button>
+<section class="page" id="cases">
+<div class="panel">
+<div class="panel-head"><h2>新增維修案件</h2></div>
+<div class="form-grid">
+<div class="field"><label>報修單位</label><input id="unit" placeholder="例如：急診部"></div>
+<div class="field"><label>維修日期</label><input id="caseDate" type="date"></div>
+<div class="field"><label>維修服務類別</label><select id="category"><option>電腦設備</option><option>網路服務</option><option>資訊系統</option><option>印表機及周邊設備</option><option>帳號權限</option><option>其他資訊服務</option></select></div>
+<div class="field"><label>維修人員</label><input id="technician" placeholder="資訊人員姓名"></div>
+<div class="field"><label>維修問題摘要</label><input id="problem" placeholder="簡述故障或服務需求"></div>
+<div class="field"><label>案件狀態</label><select id="caseStatus"><option>待處理</option><option>處理中</option><option>待評價</option></select></div>
 </div>
-<div style="overflow-x:auto">
-<table>
-<thead><tr><th>維護項目</th><th>負責人</th><th>日期</th><th>狀態</th><th>操作</th></tr></thead>
-<tbody id="taskTable"></tbody>
-</table>
+<button class="btn" onclick="addCase()">儲存維修案件</button>
+<p class="hint">案件完成後，請將狀態更新為「待評價」，再到「填寫滿意度」進行評分。</p>
+</div>
+<div class="panel">
+<div class="panel-head"><h2>維修案件列表</h2><input class="search" id="caseSearch" placeholder="搜尋單位、類別或問題" oninput="render()"></div>
+<div style="overflow-x:auto"><table><thead><tr><th>案件編號</th><th>報修單位</th><th>維修項目</th><th>日期</th><th>狀態</th><th>操作</th></tr></thead><tbody id="caseRows"></tbody></table></div>
 </div>
 </section>
-</div>
 
-<div>
-<section class="panel">
-<div class="panel-head"><h2>🔔 近期維護工作</h2></div>
-<div class="task-list" id="upcoming"></div>
-</section>
-<section class="panel" id="equipment">
-<div class="panel-head"><h2>🖥️ 設備管理概況</h2></div>
-<div class="task-list">
-<div class="task"><span>伺服器設備</span><strong>12 台</strong></div>
-<div class="task"><span>網路設備</span><strong>28 台</strong></div>
-<div class="task"><span>電腦設備</span><strong>150 台</strong></div>
-<div class="task"><span>備份設備</span><strong>5 台</strong></div>
+<section class="page" id="survey">
+<div class="panel">
+<div class="panel-head"><h2>✎ 維修服務滿意度評估</h2></div>
+<p class="hint">請選擇已完成的維修案件，依實際服務經驗評分。每項分數為 1～5 分。</p>
+<div class="field"><label>選擇維修案件</label><select id="surveyCase"></select></div>
+<div class="field"><label>填寫人員</label><input id="reviewer" placeholder="資訊行政人員姓名"></div>
+<div id="ratingFields">
+<div class="rating-row"><label>維修處理速度</label><select id="r1"><option value="5">5 分－非常滿意</option><option value="4">4 分－滿意</option><option value="3">3 分－普通</option><option value="2">2 分－不滿意</option><option value="1">1 分－非常不滿意</option></select></div>
+<div class="rating-row"><label>維修技術能力</label><select id="r2"><option value="5">5 分－非常滿意</option><option value="4">4 分－滿意</option><option value="3">3 分－普通</option><option value="2">2 分－不滿意</option><option value="1">1 分－非常不滿意</option></select></div>
+<div class="rating-row"><label>服務態度</label><select id="r3"><option value="5">5 分－非常滿意</option><option value="4">4 分－滿意</option><option value="3">3 分－普通</option><option value="2">2 分－不滿意</option><option value="1">1 分－非常不滿意</option></select></div>
+<div class="rating-row"><label>問題解決程度</label><select id="r4"><option value="5">5 分－非常滿意</option><option value="4">4 分－滿意</option><option value="3">3 分－普通</option><option value="2">2 分－不滿意</option><option value="1">1 分－非常不滿意</option></select></div>
+<div class="rating-row"><label>整體滿意度</label><select id="r5"><option value="5">5 分－非常滿意</option><option value="4">4 分－滿意</option><option value="3">3 分－普通</option><option value="2">2 分－不滿意</option><option value="1">1 分－非常不滿意</option></select></div>
+</div>
+<div class="field"><label>意見及改善建議</label><textarea id="comment" placeholder="請輸入服務意見、問題原因或改善建議"></textarea></div>
+<button class="btn green" onclick="submitSurvey()">送出滿意度評估</button>
 </div>
 </section>
-<section class="panel" id="staff">
-<div class="panel-head"><h2>👥 人員管理</h2></div>
-<div class="task-list">
-<div class="task"><span>資訊維護人員</span><strong>10 人</strong></div>
-<div class="task"><span>系統管理人員</span><strong>2 人</strong></div>
+
+<section class="page" id="records">
+<div class="panel">
+<div class="panel-head"><h2>滿意度紀錄查詢</h2><div class="actions"><input class="search" id="recordSearch" placeholder="搜尋案件或單位" oninput="render()"><button class="btn" onclick="exportCSV()">匯出 CSV</button></div></div>
+<div style="overflow-x:auto"><table><thead><tr><th>案件編號</th><th>報修單位</th><th>維修項目</th><th>填寫人員</th><th>平均分數</th><th>整體評分</th><th>評估日期</th></tr></thead><tbody id="recordRows"></tbody></table></div>
 </div>
 </section>
-<section class="panel" id="about">
+
+<section class="page" id="improve">
+<div class="panel">
+<div class="panel-head"><h2>⚑ 不滿意案件改善追蹤</h2></div>
+<p class="hint">整體滿意度低於 3 分，或任何單項評分低於 3 分，列入改善追蹤。</p>
+<div style="overflow-x:auto"><table><thead><tr><th>案件編號</th><th>報修單位</th><th>問題摘要</th><th>整體分數</th><th>改善建議</th><th>追蹤狀態</th><th>操作</th></tr></thead><tbody id="improveRows"></tbody></table></div>
+</div>
+</section>
+
+<section class="page" id="about">
+<div class="panel">
 <h2>系統說明</h2>
-<p style="font-size:13px;color:#78879a;line-height:1.8">本系統為醫療資訊部門維護排程展示原型。畫面數據為虛構示範資料，尚未連接正式資料庫或多人登入服務。</p>
+<p class="hint">本系統為醫院資訊維修滿意度管理展示原型。資料儲存在目前瀏覽器的 localStorage，適合功能展示及測試。尚未連接正式資料庫、多人登入或權限管理。</p>
+<p class="hint">正式上線前須由院方核准資訊安全架構、帳號驗證、資料庫及權限管理。請勿在公開展示網站輸入病患個資、帳號密碼或院內機敏資料。</p>
+<button class="btn light" onclick="if(confirm('確定清除本瀏覽器的展示資料？')){localStorage.removeItem('itSatisfactionCases');cases=[];render()}">清除展示資料</button>
+</div>
 </section>
-</div>
-</div>
-<div class="footer">Hospital IT Maintenance Center · Demo Version</div>
+<div class="footer">Hospital IT Repair Satisfaction Center · Demo Version</div>
 </main>
 </div>
 
-<div class="modal" id="modal">
-<div class="dialog">
-<h2>新增維護工作</h2>
-<div class="field"><label>維護項目</label><input id="taskName" placeholder="例如：核心網路設備檢查"></div>
-<div class="field"><label>負責人</label><input id="owner" placeholder="例如：資訊人員 A"></div>
-<div class="field"><label>預定日期</label><input id="date" type="date"></div>
-<div class="field"><label>工作狀態</label><select id="status"><option>待處理</option><option>進行中</option><option>已完成</option></select></div>
-<div class="dialog-actions">
-<button class="btn btn-light" onclick="closeModal()">取消</button>
-<button class="btn" onclick="addTask()">儲存工作</button>
-</div>
-</div>
-</div>
-
 <script>
-const today=new Date();
-let shown=new Date(today.getFullYear(),today.getMonth(),1);
-const pad=n=>String(n).padStart(2,'0');
-const dateKey=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-let tasks=JSON.parse(localStorage.getItem('hospitalTasks')||'null')||[
-{ name:'核心網路設備檢查',owner:'資訊人員 A',date:dateKey(new Date(today.getFullYear(),today.getMonth(),5)),status:'待處理'},
-{ name:'備份系統測試',owner:'資訊人員 B',date:dateKey(new Date(today.getFullYear(),today.getMonth(),8)),status:'進行中'},
-{ name:'伺服器例行維護',owner:'資訊人員 C',date:dateKey(new Date(today.getFullYear(),today.getMonth(),12)),status:'已完成'},
-{ name:'防火牆安全檢查',owner:'資訊人員 D',date:dateKey(new Date(today.getFullYear(),today.getMonth(),18)),status:'待處理'},
-{ name:'資料庫效能檢查',owner:'資訊人員 E',date:dateKey(new Date(today.getFullYear(),today.getMonth(),23)),status:'待處理'}
-];
-function save(){localStorage.setItem('hospitalTasks',JSON.stringify(tasks))}
+const $=id=>document.getElementById(id);
+let cases=JSON.parse(localStorage.getItem('itSatisfactionCases')||'[]');
+const today=()=>new Date().toISOString().slice(0,10);
+const save=()=>localStorage.setItem('itSatisfactionCases',JSON.stringify(cases));
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const avg=c=>c.ratings?c.ratings.reduce((a,b)=>a+b,0)/c.ratings.length:0;
+const rated=()=>cases.filter(c=>c.ratings);
+const needsImprove=c=>c.ratings&&(avg(c)<3||c.ratings.some(x=>x<3));
+const titles={dashboard:'資訊維修滿意度總覽',cases:'維修案件管理',survey:'填寫維修滿意度',records:'滿意度紀錄查詢',improve:'改善追蹤管理',about:'系統說明'};
+
+function showPage(name){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+$(name).classList.add('active');
+document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.page===name));
+$('pageTitle').textContent=titles[name];
+render();
+}
+document.querySelectorAll('.nav').forEach(n=>n.addEventListener('click',e=>{e.preventDefault();showPage(n.dataset.page)}));
+
+function addCase(){
+const unit=$('unit').value.trim(),date=$('caseDate').value,problem=$('problem').value.trim(),technician=$('technician').value.trim();
+if(!unit||!date||!problem||!technician){alert('請填寫報修單位、日期、問題摘要及維修人員');return}
+cases.unshift({id:'IT'+Date.now().toString().slice(-7),unit,date,category:$('category').value,problem,technician,status:$('caseStatus').value,ratings:null,comment:'',reviewer:'',reviewDate:'',improveStatus:'待改善'});
+save();
+['unit','problem','technician'].forEach(id=>$(id).value='');
+$('caseDate').value=today();
+render();alert('維修案件已登錄');
+}
+function setCaseStatus(id,status){
+const c=cases.find(x=>x.id===id);if(!c)return;
+c.status=status;save();render();
+}
+function submitSurvey(){
+const id=$('surveyCase').value,c=cases.find(x=>x.id===id);
+if(!c){alert('請先選擇尚未評估的維修案件');return}
+const reviewer=$('reviewer').value.trim();
+if(!reviewer){alert('請填寫資訊行政人員姓名');return}
+c.ratings=[1,2,3,4,5].map(n=>Number($('r'+n).value));
+c.comment=$('comment').value.trim();c.reviewer=reviewer;c.reviewDate=today();c.status='已完成';
+c.improveStatus=needsImprove(c)?'待改善':'無需改善';
+save();$('reviewer').value='';$('comment').value='';
+render();alert('滿意度評估已儲存');
+showPage('records');
+}
+function setImprove(id){
+const c=cases.find(x=>x.id===id);if(!c)return;
+c.improveStatus=c.improveStatus==='改善完成'?'待改善':'改善完成';
+save();render();
+}
 function render(){
-const month=shown.getMonth(),year=shown.getFullYear();
-document.getElementById('monthName').textContent=`${year} 年 ${month+1} 月`;
-const first=new Date(year,month,1),start=(first.getDay()+6)%7;
-const days=new Date(year,month+1,0).getDate();
-const prev=new Date(year,month,0).getDate();
-let html=['一','二','三','四','五','六','日'].map(x=>`<div class="weekday">${x}</div>`).join('');
-for(let i=0;i<42;i++){
-let n=i-start+1,d,m,y,muted=false;
-if(n<1){d=prev+n;m=month-1;y=year;muted=true}
-else if(n>days){d=n-days;m=month+1;y=year;muted=true}
-else{d=n;m=month;y=year}
-let key=`${y}-${pad(m+1)}-${pad(d)}`;
-let items=tasks.filter(t=>t.date===key);
-let isToday=key===dateKey(today);
-html+=`<div class="day ${muted?'muted':''} ${isToday?'today':''}"><div class="day-num">${d}</div>${items.slice(0,2).map(t=>`<div class="event ${t.status==='已完成'?'done':t.status==='進行中'?'progress':''}" title="${t.name}">${t.name}</div>`).join('')}${items.length>2?`<div>+${items.length-2} 項</div>`:''}</div>`;
+const ratedCases=rated(),mean=ratedCases.length?ratedCases.reduce((s,c)=>s+avg(c),0)/ratedCases.length:0;
+$('total').textContent=cases.length;
+$('rated').textContent=ratedCases.length;
+$('average').textContent=ratedCases.length?mean.toFixed(2)+'/5':'—';
+$('needs').textContent=ratedCases.filter(needsImprove).length;
+
+const labels=['維修處理速度','維修技術能力','服務態度','問題解決程度','整體滿意度'];
+$('categoryBars').innerHTML=labels.map((label,i)=>{
+const score=ratedCases.length?ratedCases.reduce((s,c)=>s+c.ratings[i],0)/ratedCases.length:0;
+return `<div class="bar-row"><div class="bar-label"><span>${label}</span><strong>${ratedCases.length?score.toFixed(2):'—'} / 5</strong></div><div class="bar"><span style="width:${score/5*100}%"></span></div></div>`;
+}).join('');
+const statuses=['待處理','處理中','待評價','已完成'];
+$('caseSummary').innerHTML=statuses.map(s=>`<div class="bar-row"><div class="bar-label"><span>${s}</span><strong>${cases.filter(c=>c.status===s).length} 件</strong></div></div>`).join('');
+const pending=cases.filter(c=>c.status==='待評價').length,improve=ratedCases.filter(needsImprove).length;
+$('reminders').innerHTML=`目前有 <b>${pending}</b> 件案件等待填寫滿意度。<br><br>目前有 <b>${improve}</b> 件案件需要改善追蹤。<br><br>建議定期檢視低分項目及改善結果。`;
+
+$('recentRows').innerHTML=ratedCases.slice(0,5).map(c=>`<tr><td>${esc(c.id)}</td><td>${esc(c.category)}</td><td>${avg(c).toFixed(2)}</td><td><span class="status ${needsImprove(c)?'需改善':'已完成'}">${needsImprove(c)?'需改善':'已完成'}</span></td></tr>`).join('')||'<tr><td colspan="4" class="empty">尚無滿意度紀錄</td></tr>';
+
+const q=($('caseSearch')?.value||'').toLowerCase();
+const filtered=cases.filter(c=>[c.id,c.unit,c.category,c.problem,c.technician].join(' ').toLowerCase().includes(q));
+$('caseRows').innerHTML=filtered.map(c=>`<tr><td>${esc(c.id)}</td><td>${esc(c.unit)}</td><td>${esc(c.category)}：${esc(c.problem)}</td><td>${esc(c.date)}</td><td><span class="status ${c.status}">${c.status}</span></td><td><select onchange="setCaseStatus('${c.id}',this.value)"><option ${c.status==='待處理'?'selected':''}>待處理</option><option ${c.status==='處理中'?'selected':''}>處理中</option><option ${c.status==='待評價'?'selected':''}>待評價</option></select></td></tr>`).join('')||'<tr><td colspan="6" class="empty">沒有符合的案件</td></tr>';
+
+const surveyable=cases.filter(c=>!c.ratings&&c.status==='待評價');
+$('surveyCase').innerHTML='<option value="">請選擇維修案件</option>'+surveyable.map(c=>`<option value="${c.id}">${esc(c.id)}｜${esc(c.unit)}｜${esc(c.problem)}</option>`).join('');
+
+const rq=($('recordSearch')?.value||'').toLowerCase();
+$('recordRows').innerHTML=ratedCases.filter(c=>[c.id,c.unit,c.category,c.reviewer].join(' ').toLowerCase().includes(rq)).map(c=>`<tr><td>${esc(c.id)}</td><td>${esc(c.unit)}</td><td>${esc(c.category)}</td><td>${esc(c.reviewer)}</td><td>${avg(c).toFixed(2)}</td><td>${c.ratings[4]} 分</td><td>${esc(c.reviewDate)}</td></tr>`).join('')||'<tr><td colspan="7" class="empty">尚無評估紀錄</td></tr>';
+
+$('improveRows').innerHTML=ratedCases.filter(needsImprove).map(c=>`<tr><td>${esc(c.id)}</td><td>${esc(c.unit)}</td><td>${esc(c.problem)}</td><td>${avg(c).toFixed(2)}</td><td>${esc(c.comment||'未填寫')}</td><td>${esc(c.improveStatus)}</td><td><button class="btn light" onclick="setImprove('${c.id}')">切換追蹤狀態</button></td></tr>`).join('')||'<tr><td colspan="7" class="empty">目前沒有待改善案件</td></tr>';
 }
-document.getElementById('calendarGrid').innerHTML=html;
-const current=tasks.filter(t=>t.date.startsWith(`${year}-${pad(month+1)}`));
-document.getElementById('total').textContent=current.length;
-document.getElementById('pending').textContent=current.filter(t=>t.status==='待處理').length;
-document.getElementById('progress').textContent=current.filter(t=>t.status==='進行中').length;
-document.getElementById('completed').textContent=current.filter(t=>t.status==='已完成').length;
-document.getElementById('taskTable').innerHTML=current.sort((a,b)=>a.date.localeCompare(b.date)).map((t,i)=>`<tr><td>${escapeHTML(t.name)}</td><td>${escapeHTML(t.owner)}</td><td>${t.date}</td><td><span class="status ${t.status}">${t.status}</span></td><td><button class="action" onclick="nextStatus('${t.date}',${tasks.indexOf(t)})">更新</button></td></tr>`).join('')||'<tr><td colspan="5">本月尚無維護工作</td></tr>';
-const upcoming=tasks.filter(t=>t.status!=='已完成').sort((a,b)=>a.date.localeCompare(b.date)).slice(0,5);
-document.getElementById('upcoming').innerHTML=upcoming.map(t=>`<div class="task"><span>${escapeHTML(t.name)}<small>${t.date} · ${escapeHTML(t.owner)}</small></span><span class="status ${t.status}">${t.status}</span></div>`).join('')||'目前沒有待辦工作';
+function exportCSV(){
+const rows=[['案件編號','報修單位','維修日期','服務類別','問題摘要','維修人員','填寫人員','處理速度','技術能力','服務態度','問題解決','整體滿意度','平均分數','意見','改善狀態']];
+rated().forEach(c=>rows.push([c.id,c.unit,c.date,c.category,c.problem,c.technician,c.reviewer,...c.ratings,avg(c).toFixed(2),c.comment,c.improveStatus]));
+const csv='\uFEFF'+rows.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');
+const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+const url=URL.createObjectURL(blob),a=document.createElement('a');
+a.href=url;a.download='資訊維修滿意度紀錄.csv';a.click();URL.revokeObjectURL(url);
 }
-function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function changeMonth(n){shown=new Date(shown.getFullYear(),shown.getMonth()+n,1);render()}
-function openModal(){document.getElementById('modal').classList.add('show');document.getElementById('date').value=dateKey(today)}
-function closeModal(){document.getElementById('modal').classList.remove('show')}
-function addTask(){
-const name=document.getElementById('taskName').value.trim(),owner=document.getElementById('owner').value.trim(),date=document.getElementById('date').value,status=document.getElementById('status').value;
-if(!name||!owner||!date){alert('請填寫維護項目、負責人及日期');return}
-tasks.push({name,owner,date,status});save();shown=new Date(date+'T00:00:00');closeModal();render();
-document.getElementById('taskName').value='';document.getElementById('owner').value='';
-}
-function nextStatus(date,index){
-const order=['待處理','進行中','已完成'];
-tasks[index].status=order[(order.indexOf(tasks[index].status)+1)%3];save();render();
-}
+$('caseDate').value=today();
 render();
 </script>
 </body>
-</html> 
+</html>
